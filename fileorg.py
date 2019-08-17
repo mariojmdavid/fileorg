@@ -22,19 +22,22 @@ if __name__ == "__main__":
         print("Directory does not exist: " + basedir)
         sys.exit(1)
 
-    allfiles = list()
+    allfiles = dict()
     for rdir, sdirs, files in os.walk(basedir):
         for f in files:
             fpath = os.path.join(rdir, f)
-            allfiles.append((rdir, f, 'md5'))
-            print(fpath)
+            if f not in allfiles:
+                allfiles[f] = [rdir]
+            else:
+                allfiles[f].append(rdir)
 
         for sd in sdirs:
             for f in files:
                 fpath = os.path.join(rdir, f)
-                allfiles.append((rdir, f, 'md5'))
-                print(fpath)
+                if f not in allfiles:
+                    allfiles[f] = [rdir]
+                else:
+                    allfiles[f].append(rdir)
 
-    with open('flist.txt', 'w') as fd:
-         for item in allfiles:
-             fd.write("%s,%s,%s\n" % item)
+    with open('flist.json', 'w') as fd:
+        json.dump(allfiles,fd)
