@@ -8,24 +8,30 @@ it will store in json for further treatment
 
 import sys
 import os
-import json
+import pprint
 
 
 if __name__ == "__main__":
     arg = sys.argv
     if len(arg) == 1:
         print("Missing argument: input file")
-        sys.exit(1)
+        sys.exit()
 
-    jsin = arg[1]
-    if not os.path.exists(jsin):
-        print("Input file not found: " + jsin)
-        sys.exit(1)
+    fin = arg[1]
+    if not os.path.exists(fin):
+        print("Input file not found: " + fin)
+        sys.exit()
 
-    with open(jsin, 'r') as fd:
-        allfiles = json.load(fd)
+    allfiles = dict()
+    with open(fin, 'r') as fd:
+        for l in fd:
+            dir, file = os.path.split(l.rstrip())
+            if file not in allfiles:
+                allfiles[file] = [dir]
+            else:
+                allfiles[file].append(dir)
 
-    for fl in allfiles:
-        a = allfiles[fl]
-        if len(a) > 5:
-            print(len(a), fl, a)
+    #pprint.pprint(allfiles)
+    for fout in allfiles:
+        fullpath = os.path.join(allfiles[fout][0], fout)
+        print(fullpath)
