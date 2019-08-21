@@ -33,5 +33,8 @@ if __name__ == "__main__":
 
     #pprint.pprint(allfiles)
     for fout in allfiles:
+        nfiles = len(allfiles[fout])
         fullpath = os.path.join(allfiles[fout][0], fout)
-        print(fullpath)
+        if nfiles > 1:
+            print(nfiles, fout, allfiles[fout])
+            #print(fullpath)
